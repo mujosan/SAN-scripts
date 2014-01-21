@@ -1,31 +1,44 @@
 #!/usr/local/bin/ruby -w
+#--
+# Copyright 2013 by Martin Horner (martin.horner@telecom.co.nz)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to
+# deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+# sell copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+# IN THE SOFTWARE.
+#++
+
 #
 # check_clariion.rb
 #
-# This script interrogates the Clariions, via naiseccli, and queries status information.
-# Any failures or variances from previous script execution is reported.
+# This script interrogates the Clariions/VNXs, via naviseccli, and queries 
+# status information. Any anomalies are output to the console.
 #
-# Change History:
-# ===============
-# v0.1 - MH - First working release.
-# v0.2 - MH - Ignore disk state of "Empty" - its ok.
-# v0.3 - MH - Refactored to be more object-oriented.
-
 ############### Required Gems ###############
 require "optparse"
 require "ostruct"
-#############################################
-############ Variable Definitions ###########
-#############################################
-############ Constant Definitions ###########
-INDENT = "...."
+require 'timeout'
+require 'time'
 #############################################
 ######### Class/Module Definitions ##########
 class OptionParse
 
   def self.parse(args)
     options = OpenStruct.new
-    options.clariions = ['clariion01','clariion02','vnx01']
+    options.clariions = ['clariion1','clariion2','vnx1','vnx2']
 
     option_parser = OptionParser.new do |opts|
       opts.banner = "Usage: clariion_check.rb [options]"
@@ -34,7 +47,7 @@ class OptionParse
 
       opts.on("-i CLARIION", "Enter specific Clariion") do |clariion|
         options.clariions = []
-        clariion = clariion + "_spa" unless clariion.end_with?("spa")
+        clariion = clariion.split("_").first if clariion.end_with?("_spa") # ignore SP id in suffix
         options.clariions << clariion
       end
 
@@ -51,119 +64,33 @@ class OptionParse
 
 end # of OptionParse
 
-class Clariion
-  attr_reader :name
+class String
 
-  def initialize(name)
-    @name = name 
-    @state = {}
-    @type = {}
-    @default_owner = {}
-    @current_owner = {}
-    lunid = []
-    naviseccli("getlun -state -type -default -owner -capacity").each_line do |line|
-      case line.downcase
-      when /^logical unit number/
-        lunid.push line.split.last.strip
-        next
-      when /^state:/
-        @state[lunid[-1]] = line.split(":").last.strip
-        next
-      when /^raid type/
-        @type[lunid[-1]] = line.split(":").last.strip
-        next
-      when /^default owner/
-        @default_owner[lunid[-1]] = line.split.last.strip
-        next
-      when /^current owner/
-        @current_owner[lunid[-1]] = line.split.last.strip
-        next
-      end  
-    end
-  end # of initialize
-
-  def naviseccli(cmd)
-    %x[/opt/Navisphere/bin/naviseccli -h #{@name} #{cmd}].chop
+  def parse_trespass
+    self.gsub!(/^L\w+\s\w+\s\w+\s+/, '')              # Remove LOGICAL LUN NUMBER text
+    self.gsub!(/\n\w{7}\s\w+:\s+/, ',')               # Replace Default/Current O/owner text with a comma
+    self.gsub!(/\nRAID Type:\s+/, ',')                # Replace RAID Type text with a comma
+    self.gsub!(/^\n/, '')                             # Remove redundant newlines
   end
 
-  def faults
-    @faults = []                      # Array to hold fault descriptions.
-    @faults << cache_faults
-    @faults << cru_faults
-    @faults << disk_faults
-    @faults << lun_faults
-    @faults << trespasses
-    @faults << raid_group_faults
-    @faults
+  def parse_disk
+    self.gsub!(/\nState:\s+ /, ' State: ')
+    self.gsub!(/\nBus/, 'Bus')
   end
 
-  def cache_faults
-    faults = []                      # Array to hold fault descriptions.
-    naviseccli("getcache -state -rsta -rstb -wst").each_line do |line|
-      faults << line.squeeze.chomp unless line =~ /Cache State/ && line =~ /Enabled/
-    end
-    faults.compact unless faults.empty?
+  def parse_lun
+    self.gsub!(/^L\w+\s\w+\s\w+\s+/, '')              # Remove LOGICAL LUN NUMBER text
+    self.gsub!(/\nState:\s+/, ' ')
+    self.gsub!(/^\n/, '')
   end
 
-  def cru_faults
-    faults = []                      # Array to hold fault descriptions.
-    naviseccli("getcrus").each_line do |line|
-      faults << line.chomp if line =~ /DAE/ && line =~ /FAULT/
-      faults << line.chomp if line =~ /State/ && !( line =~ /Present/ || line =~ /Valid/ )
-    end
-    faults unless faults.empty?
+  def parse_rg
+    self.gsub!(/^RaidGroup ID:\s+/, 'RaidGroup: ')   # Remove redundant text & white space
+    self.gsub!(/\nRaidGroup:/, 'RaidGroup:')         # Remove newline
+    self.gsub!(/\nRaidGroup State:\s+/, '~')         # Swap text for a tilde char
+    self.gsub!(/\n \s+/, '~')                        # Swap newline & whitespace for a tilde char
   end
-
-  def disk_faults
-    faults = []                      # Array to hold fault descriptions.
-    @disks = naviseccli("getdisk -state")
-    @disks.gsub!(/\nState:\s+ /, ' State: ')
-    @disks.gsub!(/\nBus/, 'Bus')
-    @disks.each_line do |line|
-      if line =~ /State/
-        unless line =~ /Enabled/ || line =~ /Hot Spare Ready/ || line =~ /Unbound/ || line =~ /Empty/
-          faults << "Bus #{line.split[1]} Enclosure #{line.split[3]} Disk #{line.split[5]} is #{line.split(':').last}"
-        end
-      end
-    end
-    faults unless faults.empty?
-  end
-
-  def lun_faults
-    faults = []                      # Array to hold fault descriptions.
-    @state.each do |lun,status|
-      faults << "LUN #{lun} is faulted!" if status == /Faulted/
-    end
-    faults unless faults.empty?
-  end
-
-  def trespasses
-    trespasses = 0
-    faults = []                      # Array to hold fault descriptions.
-    @default_owner.each do |lun, owner|
-      if @current_owner[lun] != owner && @type[lun] != 'Hot Spare'
-        faults << "Trespassed LUNs:" unless trespasses > 0
-        faults << "#{lun} (should be on #{owner} now on #{@current_owner[lun]})"
-        trespasses += 1
-      end
-    end
-    faults unless faults.empty?
-  end
-
-  def raid_group_faults
-    @rgs = naviseccli("getrg -state")
-    @rgs.gsub!(/^RaidGroup ID:\s+/, 'RaidGroup: ')   # Remove redundant text & white space
-    @rgs.gsub!(/\nRaidGroup:/, 'RaidGroup:')         # Remove newline
-    @rgs.gsub!(/\nRaidGroup State:\s+/, '~')         # Swap text for a tilde char
-    @rgs.gsub!(/\n \s+/, '~')                        # Swap newline & whitespace for a tilde char
-    faults = []                                      # Array to hold fault descriptions.
-    @rgs.each_line do |line|
-      faults << "RG #{line.split[1]} is faulted!" if line =~ /Invalid/ || line =~ /Halted/ || line =~ /Busy/
-    end
-    faults unless faults.empty?
-  end
-
-end #of Clariion
+end
 #############################################
 ################ Main Script ################
 options = OptionParse.parse(ARGV)
@@ -172,12 +99,11 @@ options.clariions.each do |name|
   print "Checking #{name.split("_").first.upcase}..."
   c = Clariion.new(name)
   faults = c.faults
-  unless faults
+  if faults.empty?
     puts "ok."
   else
     puts "Following issues found:"
-    puts faults.compact
+    puts faults
   end
 end
 #################### End ####################
-
