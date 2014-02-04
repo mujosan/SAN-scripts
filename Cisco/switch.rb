@@ -1,5 +1,5 @@
 #--
-# Copyright 2013 by Martin Horner (martin.horner@telecom.co.nz)
+# Copyright 2013 by Martin Horner (martin@mujosan.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -41,7 +41,7 @@ require "net/ssh"
 # Without the above any upgrades to a switch will break this script for that switch.
 #############################################
 ############ Constant Definitions ###########
-PATH = "/usr/local/tnzsan/cisco/"
+PATH = "/usr/local/san/cisco/"
 INDENT = '    '
 HEAD = "#########################################################"
 TAIL = "#########################################################"

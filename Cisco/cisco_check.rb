@@ -25,7 +25,7 @@ class OptionParse
 
   def self.parse(args)
     options = OpenStruct.new
-    options.switch = ['cis01','cis02','cis03','cis04']
+    options.switch = ['switch01','switch02','switch03']
 
     option_parser = OptionParser.new do |opts|
       opts.banner = "Usage: cisco_check.rb [options]"
@@ -33,8 +33,14 @@ class OptionParse
       opts.separator "Specific options:"
 
       opts.on("-i SWITCH", "Enter specific switch") do |switch|
-        options.switch = []
-        options.switch << switch
+        if options.switch.include?(switch.downcase)
+          options.switch = []
+          options.switch << switch
+        else
+          puts "Sorry, that switch is not on the list!"
+          puts "Either you have fat fingers or the script needs an update."
+          exit
+        end
       end
 
       opts.on( '-h', '--help', 'Display this screen' ) do
