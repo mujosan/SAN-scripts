@@ -1,6 +1,6 @@
 #!/usr/local/bin/ruby -w
 #--
-# Copyright 2013 by Martin Horner (martin.horner@telecom.co.nz)
+# Copyright 2014 by Martin Horner (martin@mujosan.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -33,12 +33,13 @@ require "ostruct"
 require 'timeout'
 require 'time'
 #############################################
+require_relative 'clariion'
 ######### Class/Module Definitions ##########
 class OptionParse
 
   def self.parse(args)
     options = OpenStruct.new
-    options.clariions = ['clariion1','clariion2','vnx1','vnx2']
+    options.clariions = ['clariion01','clariion02','vnx01','vnx02']
 
     option_parser = OptionParser.new do |opts|
       opts.banner = "Usage: clariion_check.rb [options]"
@@ -46,9 +47,15 @@ class OptionParse
       opts.separator "Specific options:"
 
       opts.on("-i CLARIION", "Enter specific Clariion") do |clariion|
-        options.clariions = []
-        clariion = clariion.split("_").first if clariion.end_with?("_spa") # ignore SP id in suffix
-        options.clariions << clariion
+        if options.clariions.include?(clariion.downcase) 
+          options.clariions = []
+          clariion = clariion.split("_").first if clariion.end_with?("spa")
+          options.clariions << clariion
+        else
+          puts "Sorry, that Clariion is not on the list!"
+          puts "Either you have experienced a typing malfunction or the script needs an update."
+          exit
+        end
       end
 
       opts.on( '-h', '--help', 'Display this screen' ) do
@@ -63,34 +70,6 @@ class OptionParse
   end # of parse()
 
 end # of OptionParse
-
-class String
-
-  def parse_trespass
-    self.gsub!(/^L\w+\s\w+\s\w+\s+/, '')              # Remove LOGICAL LUN NUMBER text
-    self.gsub!(/\n\w{7}\s\w+:\s+/, ',')               # Replace Default/Current O/owner text with a comma
-    self.gsub!(/\nRAID Type:\s+/, ',')                # Replace RAID Type text with a comma
-    self.gsub!(/^\n/, '')                             # Remove redundant newlines
-  end
-
-  def parse_disk
-    self.gsub!(/\nState:\s+ /, ' State: ')
-    self.gsub!(/\nBus/, 'Bus')
-  end
-
-  def parse_lun
-    self.gsub!(/^L\w+\s\w+\s\w+\s+/, '')              # Remove LOGICAL LUN NUMBER text
-    self.gsub!(/\nState:\s+/, ' ')
-    self.gsub!(/^\n/, '')
-  end
-
-  def parse_rg
-    self.gsub!(/^RaidGroup ID:\s+/, 'RaidGroup: ')   # Remove redundant text & white space
-    self.gsub!(/\nRaidGroup:/, 'RaidGroup:')         # Remove newline
-    self.gsub!(/\nRaidGroup State:\s+/, '~')         # Swap text for a tilde char
-    self.gsub!(/\n \s+/, '~')                        # Swap newline & whitespace for a tilde char
-  end
-end
 #############################################
 ################ Main Script ################
 options = OptionParse.parse(ARGV)
