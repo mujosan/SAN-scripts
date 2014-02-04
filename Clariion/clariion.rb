@@ -35,6 +35,35 @@ require 'time'
 ############ Constant Definitions ###########
 NARDIR = "/usr/local/tnzsan/vnx/nar/"
 #############################################
+class String
+
+  def parse_trespass
+    self.gsub!(/^L\w+\s\w+\s\w+\s+/, '')              # Remove LOGICAL LUN NUMBER text
+    self.gsub!(/\n\w{7}\s\w+:\s+/, ',')               # Replace Default/Current O/owner text with a comma
+    self.gsub!(/\nRAID Type:\s+/, ',')                # Replace RAID Type text with a comma
+    self.gsub!(/^\n/, '')                             # Remove redundant newlines
+  end
+
+  def parse_disk
+    self.gsub!(/\nState:\s+ /, ' State: ')
+    self.gsub!(/\nBus/, 'Bus')
+  end
+
+  def parse_lun
+    self.gsub!(/^L\w+\s\w+\s\w+\s+/, '')              # Remove LOGICAL LUN NUMBER text
+    self.gsub!(/\nState:\s+/, ' ')
+    self.gsub!(/^\n/, '')
+  end
+
+  def parse_rg
+    self.gsub!(/^RaidGroup ID:\s+/, 'RaidGroup: ')   # Remove redundant text & white space
+    self.gsub!(/\nRaidGroup:/, 'RaidGroup:')         # Remove newline
+    self.gsub!(/\nRaidGroup State:\s+/, '~')         # Swap text for a tilde char
+    self.gsub!(/\n \s+/, '~')                        # Swap newline & whitespace for a tilde char
+  end
+
+end
+
 class Clariion
   attr_reader :name
 
@@ -43,24 +72,24 @@ class Clariion
   end # of initialize
 
   def naviseccli(cmd)
+    begin
+      try_three_times(cmd, "a")
+    rescue Timeout::Error => e
+      try_three_times(cmd, "b")
+    end
+  end
+
+  def try_three_times(cmd,sp)
     tries = 0
     begin
       tries += 1
       Timeout.timeout(300) do                         # Time out if no response from SPA within 5mins.
-        %x[/opt/Navisphere/bin/naviseccli -h #{@name}_spa #{cmd}].chop
+        %x[/opt/Navisphere/bin/naviseccli -h #{@name}_sp#{sp} #{cmd}].chop
       end
     rescue Timeout::Error => e
       retry if tries < 3
-      tries = 0
-      begin
-        tries += 1
-        Timeout.timeout(300) do                         # Time out if no response from SPB within 5mins.
-          %x[/opt/Navisphere/bin/naviseccli -h #{@name}_spb #{cmd}].chop
-        end
-      rescue Timeout::Error => e
-        puts "NavisecCLI timed out - No data returned for #{cmd}"
-        return " "
-      end
+      puts "No response from SP#{sp.upcase}"
+      return " "
     end
   end
 
