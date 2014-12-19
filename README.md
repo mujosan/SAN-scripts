@@ -4,7 +4,7 @@
 
 This is a collection of Ruby scripts created to assist with my day job as a storage admin.
 
-Version 1.0
+Version **1.0**
 
 ### How do I get set up? ###
 
