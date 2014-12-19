@@ -1,5 +1,5 @@
 #--
-# Copyright 2013 by Martin Horner (martin@mujosan.com)
+# Copyright 2014 by Martin Horner (martin@mujosan.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -54,15 +54,14 @@ class Switch
     @name = name
   end
 
-  # This method runs a CLI command (usually a show command)
-  # against the switch.
+  # This method runs a CLI (show) command against the switch.
   #
   # Exception handling included for:
   #   Net::SSH::Exception - corrupted mac detected
   #
   #   This exception handling makes 10 attempts to get the running config before moving on to the next switch
   #   with a 10sec delay between attempts. This should get around the flakey behaviour of ssh due to the bug
-  #   with the OpenSSH implemantation on nx-os.
+  #   with the OpenSSH implementation on nx-os.
   #
   def ssh(cmd)
     tries = 0
