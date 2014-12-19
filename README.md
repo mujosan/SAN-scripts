@@ -12,7 +12,7 @@ These scripts are intended to be run on a *nix platform. The Cisco and EMC Clari
 
 Clone the repository and amend equipment names to suit local naming conventions. Once SSH/NavisecCLI are installed you're good to go.
 
-* Configuration
+#### Configuration ####
 
 All scripts expect the storage equipment to be listed in the /etc/hosts file.
 
@@ -25,19 +25,10 @@ Create a file called "config" in your ~/.ssh directory:
 
 Without the above any upgrades to a switch will break this script for that switch. The "Host" entry should contain a wildcard string for the switch names.
 
-* Dependencies
+#### Dependencies ####
 
 A server platform that supports /etc/hosts files and NavisecCLI - Solaris (Oracle), AIX, RHEL (or Centos) and MS Windows Server.
 The scripts make use of SSH or EMC NavisecCLI
-
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
 
 ### Who do I talk to? ###
 
