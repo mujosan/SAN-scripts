@@ -2,14 +2,7 @@
 #
 # clariion_nar_collect.rb
 #
-# This script accesses the following Clariions:
-# EL2812
-# EL2855
-# EL2866
-# EV4984
-# EV4985
-#
-# For each Clariion it:
+# For each Clariion this script:
 #   lists NAR files present in the NAR directory;
 #   lists the NAR files available on the Clariion; 
 #   transfers any new NAR files;
@@ -19,10 +12,6 @@ require_relative "clariion"
 ############### Required Gems ###############
 require "optparse"
 require "ostruct"
-#############################################
-############ Variable Definitions ###########
-#############################################
-############ Constant Definitions ###########
 #############################################
 ######### Class/Module Definitions ##########
 class OptionParse
