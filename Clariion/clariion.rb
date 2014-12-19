@@ -21,19 +21,12 @@
 #++
 
 # This file contains the class definition for EMC Clariion/VNX storage arrays.
-############### Required Files ##############
 
 ############### Required Gems ###############
 require "optparse"
 require "ostruct"
 require 'timeout'
 require 'time'
-#############################################
-############ Variable Definitions ###########
-
-#############################################
-############ Constant Definitions ###########
-NARDIR = "/usr/local/tnzsan/vnx/nar/"
 #############################################
 class String
 
@@ -172,31 +165,10 @@ class Clariion
       sptime = Time.strptime(timestring, "%m/%d/%y %H:%M:%S")  # Extract SP time
       difference = (@now - sptime)                   # Compare SP time to current time
       if difference > 600                            # If time difference > 5mins
-        faults << "#{line.split(/:/).first} is #{( difference/60 ).abs} minutes out!" # Report fault
+        faults << "#{line.split(/:/).first} is #{( difference/60 ).abs} minutes out!"
       end
     end
     faults
   end
 
-  def nars2get
-    nar_available = []
-    nar_stored = []
-    naviseccli("analyzer -archive -list").each_line do |line|
-      if line =~ /^\d/
-        nar_available << line.split.last
-      end
-    end
-    Dir.glob(NARDIR + '*.nar').each do |line|
-      nar_stored << line.split("/").last
-    end
-    # List NAR file names that are available but not stored
-    (nar_stored | nar_available) - nar_stored
-  end
-
-  def get_nars
-    if nars2get.length > 0
-      narlist = nars2get.to_s.gsub(/\",*/, '')[1..-2]
-      naviseccli("analyzer -archive -path #{NARDIR} -file #{narlist} -o")
-    end
-  end
 end # of class Clariion
