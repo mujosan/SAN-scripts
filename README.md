@@ -23,7 +23,7 @@ Create a file called "config" in your ~/.ssh directory:
       UserKnownHostsFile=/dev/null
 
 
-Without the above any upgrades to a switch will break this script for that switch.
+Without the above any upgrades to a switch will break this script for that switch. The "Host" entry should contain a wildcard string for the switch names.
 
 * Dependencies
 
