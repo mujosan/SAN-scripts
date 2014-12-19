@@ -16,6 +16,15 @@ Clone the repository and amend equipment names to suit local naming conventions.
 
 All scripts expect the storage equipment to be listed in the /etc/hosts file.
 
+Create a file called "config" in your ~/.ssh directory:
+<code>
+  Host switch*
+    StrictHostKeyChecking no
+    UserKnownHostsFile=/dev/null
+</code>
+
+Without the above any upgrades to a switch will break this script for that switch.
+
 * Dependencies
 
 A server platform that supports /etc/hosts files and NavisecCLI - Solaris (Oracle), AIX, RHEL (or Centos) and MS Windows Server.
