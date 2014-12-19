@@ -30,8 +30,13 @@ Without the above any upgrades to a switch will break this script for that switc
 
 #### Dependencies ####
 
-A server platform that supports /etc/hosts files and NavisecCLI - Solaris (Oracle), AIX, RHEL (or Centos) and MS Windows Server.
-The scripts make use of SSH or EMC NavisecCLI
+* A server platform that supports /etc/hosts files and NavisecCLI
+    * Solaris (Oracle)
+    * AIX
+    * RHEL (or Centos)
+    * MS Windows Server.
+* SSH client.
+* EMC NavisecCLI
 
 ### Who do I talk to? ###
 
