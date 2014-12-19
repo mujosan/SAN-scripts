@@ -41,5 +41,3 @@ Without the above any upgrades to a switch will break this script for that switc
 ### Who do I talk to? ###
 
 martin@mujosan.com
-
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
