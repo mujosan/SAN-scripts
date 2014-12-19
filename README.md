@@ -10,7 +10,10 @@ Version 1.0
 
 These scripts are intended to be run on a *nix platform. The Cisco and EMC Clariion/VNX scripts were initially created on a Linux (Centos) server and later "enhanced" on a Solaris machine. IBM SVC scripts created on the Solaris machine.
 
-Clone the repository and amend equipment names to suit local naming conventions. Once SSH/NavisecCLI are installed you're good to go.
+* Clone the repository.
+* Amend equipment names to suit local naming conventions.
+* Amend PATH constants to suit.
+* Install SSH & EMC NavisecCLI.
 
 #### Configuration ####
 
