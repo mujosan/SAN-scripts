@@ -20,6 +20,7 @@ All scripts expect the storage equipment to be listed in the /etc/hosts file.
 
 A server platform that supports /etc/hosts files and NavisecCLI - Solaris (Oracle), AIX, RHEL (or Centos) and MS Windows Server.
 The scripts make use of SSH or EMC NavisecCLI
+
 * How to run tests
 * Deployment instructions
 
