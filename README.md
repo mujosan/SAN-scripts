@@ -2,7 +2,9 @@
 
 ### What is this repository for? ###
 
-This is a collection of Ruby scripts created to assist with my day job as a storage admin. My Ruby skills were self-taught and I hail from a time before OO concepts.
+This is a collection of Ruby scripts created to assist with my day job as a storage admin.
+
+My Ruby skills were self-taught and I hail from a time before OO concepts.
 
 Version 1.0
 
