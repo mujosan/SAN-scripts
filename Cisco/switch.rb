@@ -29,17 +29,6 @@ require_relative '../common'
 ############### Required Gems ###############
 require "net/ssh"
 #############################################
-############ Variable Definitions ###########
-# Create an array to store the switch names - access is via SSH and IPs are derived from the /etc/hosts file.
-# The IPs for the switches (cm0*) are derived from /etc/hosts.
-#
-# Be sure to create a file called "config" in the ~/.ssh directory:
-#  Host cm*
-#    StrictHostKeyChecking no
-#    UserKnownHostsFile=/dev/null
-#
-# Without the above any upgrades to a switch will break this script for that switch.
-#############################################
 ############ Constant Definitions ###########
 PATH = "/usr/local/san/cisco/"
 INDENT = '    '
