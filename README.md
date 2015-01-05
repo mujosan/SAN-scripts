@@ -3,12 +3,13 @@
 ### What is this repository for? ###
 
 This is a collection of Ruby scripts created to assist with my day job as a storage admin.
+The Cisco MDS and EMC Clariion/VNX scripts were initially created on a Linux (Centos) server and later "enhanced" on a Solaris machine. IBM SVC scripts created on the Solaris machine.
 
 Version **1.0**
 
 ### How do I get set up? ###
 
-These scripts are intended to be run on a *nix platform. The Cisco and EMC Clariion/VNX scripts were initially created on a Linux (Centos) server and later "enhanced" on a Solaris machine. IBM SVC scripts created on the Solaris machine.
+These scripts are intended to be run on a *nix platform. 
 
 * Clone the repository.
 * Amend equipment names to suit local naming conventions.
