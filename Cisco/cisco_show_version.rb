@@ -2,7 +2,7 @@
 #
 
 #--
-# Copyright 2012 by Martin Horner (martin.horner@telecom.co.nz)
+# Copyright 2014 by Martin Horner (martin@mujosan.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
