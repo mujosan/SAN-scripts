@@ -44,6 +44,7 @@ class OptionParse
                       'switch03','switch04',
                       'switch05','switch06',]
     options.silent = false
+    options.backupfilepath = "/usr/local/san/cisco/"
 
     opts = OptionParser.new do |opts|
       opts.banner = "Usage: #{$0} [options]"
@@ -57,6 +58,10 @@ class OptionParse
 
       opts.on( '--silent', 'Silent operation - no console messages' ) do
         options.silent = true
+      end
+      
+      opts.on( '--path', 'Enter backup file path' ) do |backupfilepath|
+        options.backupfilepath = backupfilepath
       end
 
       opts.on( '-h', '--help', 'Display this screen' ) do
@@ -78,7 +83,7 @@ options = OptionParse.parse(ARGV)
 options.switch.each do |switchname|
   print "Backing up #{switchname.upcase}..." unless options.silent
   s = Switch.new(switchname)
-  s.backup
+  s.backup(options.backupfilepath)
   puts "done." unless options.silent
 end
 puts "Finished!" unless options.silent
