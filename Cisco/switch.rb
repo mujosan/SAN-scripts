@@ -30,7 +30,6 @@ require_relative '../common'
 require "net/ssh"
 #############################################
 ############ Constant Definitions ###########
-PATH = "/usr/local/san/cisco/"
 INDENT = '    '
 HEAD = "#########################################################"
 TAIL = "#########################################################"
@@ -70,9 +69,9 @@ class Switch
 
   # This method backs up the switch running-config to a file.
   #
-  def backup
+  def backup(backupfilepath)
     running_config = ssh("show running-config")
-    outfile = File.open(PATH + "#{@name}_running-config_#{timestamp}.txt", 'w', 0660)
+    outfile = File.open(backupfilepath + "#{@name}_running-config_#{timestamp}.txt", 'w', 0660)
     outfile.puts running_config
     outfile.close
   end
