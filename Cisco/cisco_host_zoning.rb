@@ -38,9 +38,8 @@ class OptionParse
 
   def self.parse(args)
     options = OpenStruct.new
-    options.switches = ['cm009','cm019','cm029','cm013','cm037','cm010','cm020','cm030',
-                        'cm017','cm038','cm031','cm032','cm035','cm036','cm039','cm040',
-                        'cm041','cm042']
+    options.switches = ['switch01','switch02',
+                        'switch03','switch04']
     options.inactive = false
 
     opts = OptionParser.new do |opts|
@@ -75,7 +74,7 @@ class Switch
 
   def initialize(name)
     @switchname = name
-    Net::SSH.start( name, "script", :password => 'OPwKoS0Y' ) do |ssh|
+    Net::SSH.start( name, "script", :password => 'password' ) do |ssh|
       ssh.exec!("show flogi database").each_line do |line|
         @flogi_list = []
         case line
