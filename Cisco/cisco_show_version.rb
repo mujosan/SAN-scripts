@@ -46,7 +46,7 @@ class OptionParse
     options.switch = ['switch01','switch02','switch03']
 
     option_parser = OptionParser.new do |opts|
-      opts.banner = "Usage: cisco_check.rb [options]"
+      opts.banner = "Usage: cisco_show_version.rb [options]"
       opts.separator ""
       opts.separator "Specific options:"
 
