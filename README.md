@@ -36,7 +36,7 @@ Without the above any upgrades to a switch will break this script for that switc
     * Solaris (Oracle)
     * AIX
     * RHEL (or Centos)
-    * MS Windows Server.
+    * MS Windows Server (path names in scripts may have to be amended).
 * SSH client.
 * EMC NavisecCLI
 
