@@ -1,5 +1,5 @@
 #--
-# Copyright 2014 by Martin Horner (martin@mujosan.com)
+# Copyright 2015 by Martin Horner (martin@mujosan.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -39,7 +39,7 @@ class Switch
   include Common
   
   def initialize(name)
-    @name = name
+    @switchname = name
   end
 
   # This method runs a CLI (show) command against the switch.
@@ -55,7 +55,7 @@ class Switch
     tries = 0
     begin
       tries += 1
-      Net::SSH.start( @name, "script", :password => 'password' ) do |ssh|
+      Net::SSH.start( @switchname, "script", :password => 'password' ) do |ssh|
         @output = ssh.exec!(cmd)
       end
       @output.chomp
@@ -71,7 +71,7 @@ class Switch
   #
   def backup(backupfilepath)
     running_config = ssh("show running-config")
-    outfile = File.open(backupfilepath + "#{@name}_running-config_#{timestamp}.txt", 'w', 0660)
+    outfile = File.open(backupfilepath + "#{@switchname}_running-config_#{timestamp}.txt", 'w', 0660)
     outfile.puts running_config
     outfile.close
   end
