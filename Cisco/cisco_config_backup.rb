@@ -52,8 +52,14 @@ class OptionParse
       opts.separator "Specific options:"
 
       opts.on("--switch SWITCH", "Enter specific switch") do |switch|
-        options.switches = []
-        options.switches << switch
+        if options.switch.include?(switch.downcase)
+          options.switch = []
+          options.switch << switch
+        else
+          puts "Sorry, that switch is not on the list!"
+          puts "Either you have fat fingers or the script needs an update."
+          exit
+        end
       end
 
       opts.on( '--silent', 'Silent operation - no console messages' ) do
