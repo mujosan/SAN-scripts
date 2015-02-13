@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 #--
-# Copyright 2013 by Martin Horner (martin.horner@telecom.co.nz)
+# Copyright 2015 by Martin Horner (martin@mujosan.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -21,6 +21,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 #++
+
 #
 # cisco_listsnmp2.rb
 #
