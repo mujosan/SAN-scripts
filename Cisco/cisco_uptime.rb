@@ -12,15 +12,8 @@ class OptionParse
 
   def self.parse(args)
     options = OpenStruct.new
-    options.switch = ['cm009','cm010',
-                      'cm013','cm017',
-                      'cm019','cm020',
-                      'cm029','cm030',
-                      'cm031','cm032',
-                      'cm035','cm036',
-                      'cm037','cm038',
-                      'cm039','cm040',
-                      'cm041','cm042']
+    options.switch = ['switch01','switch02',
+                      'switch03','switch04']
     options.scripts = false
     options.csv = false
 
