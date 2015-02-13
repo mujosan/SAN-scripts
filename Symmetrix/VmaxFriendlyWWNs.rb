@@ -25,7 +25,7 @@ puts "========"
 switches.each do |name|
   @aliaspwwn.clear if @aliaspwwn.length > 0
   print "#{name.upcase}..."
-  Net::SSH.start( name, "script", :password => 'Oz3gee6b' ) do |ssh|
+  Net::SSH.start( name, "script", :password => 'password' ) do |ssh|
     result = ssh.exec!("show running-config")
     @fcalias = result.delete(":").scan(/fcalias name (\w+) (\w+) (\w+)\n\s+(\w+) (\w+) (\w+)/)
 #    @fcalias = result.delete(":").scan(/fcalias name (\w+-\w+) (\w+) (\w+)\n\s+(\w+) (\w+) (\w+)/) # Telecom specific HBA naming
