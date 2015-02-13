@@ -2,7 +2,7 @@
 #
 
 #--
-# Copyright 2014 by Martin Horner (martin@mujosan.com)
+# Copyright 2015 by Martin Horner (martin@mujosan.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -43,9 +43,9 @@ switches = ['switch01','switch02',
             'switch05','switch06']
 #############################################
 ################ Main Script ################
-switches.each do |switchname|                          # Iterate through each entry in the above array.
+switches.each do |switchname|
   print "Checking #{switchname.upcase}..."
-  c = Switch.new(switchname)                            # Create an instance of class Cisco for the current switch.
+  c = Switch.new(switchname)
   c.version
 end
 #################### End ####################
