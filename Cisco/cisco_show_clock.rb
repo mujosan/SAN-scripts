@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby
-#
 
 #--
-# Copyright 2012 by Martin Horner (martin.horner@telecom.co.nz)
+# Copyright 2015 by Martin Horner (martin@mujosan.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -38,9 +37,8 @@ require_relative "switch"
 #############################################
 ############ Variable Definitions ###########
 # Create an array to store the switch names - access is via SSH and IPs are derived from the /etc/hosts file.
-switches = ['cm009','cm010','cm013','cm017','cm019','cm020','cm029','cm030',
-            'cm031','cm032','cm035','cm036','cm037','cm038','cm039','cm040',
-            'cm041','cm042']
+switches = ['switch01','switch02',
+            'switch03','switch04']
 #############################################
 ################ Main Script ################
 switches.each do |switchname|                          # Iterate through each entry in the above array.
