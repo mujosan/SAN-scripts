@@ -162,6 +162,12 @@ class Switch
     faults unless faults.empty?
   end
 
+  def clock
+    ssh("show clock").each_line do |line|
+      puts line
+    end
+  end
+  
   def version
     ssh("show version").each_line do |line|
       puts line.split.last if line =~ /system:/ && line =~ /version/
