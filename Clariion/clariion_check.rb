@@ -1,6 +1,6 @@
 #!/usr/local/bin/ruby -w
 #--
-# Copyright 2014 by Martin Horner (martin@mujosan.com)
+# Copyright 2015 by Martin Horner (martin@mujosan.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
