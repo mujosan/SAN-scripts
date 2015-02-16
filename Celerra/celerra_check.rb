@@ -1,31 +1,82 @@
-#!/usr/bin/ruby -w
+#!/usr/bin/env ruby
+
+#--
+# Copyright 2015 by Martin Horner (martin@mujosan.com)
 #
-# check_celerra.rb
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to
+# deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+# sell copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
 #
-# This script interrogates the EMC Celerras, via SSH, and queries status information.
-# Any failures or variances from previous script execution is reported.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
-# Change History:
-# ===============
-# v0.1 - MH - First working release.
-# v0.2 - MH - Ignore call home failures.
-# v0.3 - MH - Ignore disk or SP failures (these would be covered by check_clariion).
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+# IN THE SOFTWARE.
+#++
+
+#
+# celerra_check.rb
+#
+# This script connects to the EMC Celerras, via SSH, and retrieves the contents
+# of a daily log file. The log file is created by a shell script on the Celerra
+# that runs a "nas_checkup" command. This shell script is placed in
+# /etc/cron.daily on the control station.
 
 ############### Required Gems ###############
-require 'rubygems'
 require 'net/ssh'
-#############################################
-############ Variable Definitions ###########
-celerras = [ 'en2075','en1874','en2305' ]
+require "optparse"
+require "ostruct"
 #############################################
 ############ Constant Definitions ###########
 INDENT = "\n......"
 #############################################
 ######### Class/Module Definitions ##########
+class OptionParse
+
+  def self.parse(args)
+    options = OpenStruct.new
+    options.celerra = ['nas01','nas02','nas03']
+
+    option_parser = OptionParser.new do |opts|
+      opts.banner = "Usage: celerra_check.rb [options]"
+      opts.separator ""
+      opts.separator "Specific options:"
+
+      opts.on("-i CELERRA", "Enter specific switch") do |celerra|
+        if options.celerra.include?(celerra.downcase)
+          options.celerra = []
+          options.celerra << celerra
+        else
+          puts "Sorry, that Celerra is not on the list!"
+          puts "Either you have fat fingers or the script needs an update."
+          exit
+        end
+      end
+
+      opts.on( '-h', '--help', 'Display this screen' ) do
+        puts opts
+        exit
+      end
+
+    end
+
+    option_parser.parse!(args)
+    options
+  end # of parse()
+
+end # of OptionParse
+
 class Celerra
 
   def initialize(name)
-    @name = name
     # SSH to this Celerra and download the required log files
     Net::SSH.start( name, "script", :password => 'password123' ) do |ssh|
       @daily = ssh.exec!("cat log/daily.log")
@@ -58,12 +109,12 @@ class Celerra
 
 end # of Celerra
 #############################################
-
 ################ Main Script ################
-celerras.each do |name|
+options = OptionParse.parse(ARGV)
+
+options.celerra.each do |name|
   print "Checking #{name.upcase}..."
   c = Celerra.new(name)
-  c.faults                                       # Determine what is wrong.
+  c.faults
 end
 #################### End ####################
-
