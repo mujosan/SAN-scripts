@@ -38,11 +38,52 @@
 # Without the above any upgrades to a switch will break this script for that switch.
 #############################################
 require_relative 'switch'
+require "optparse"
+require "ostruct"
+#############################################
+############ Constant Definitions ###########
+HEAD = "#########################################################"
+#############################################
+######### Class/Module Definitions ##########
+class OptionParse
 
+  def self.parse(args)
+    options = OpenStruct.new
+    options.switch = ['switch01','switch02','switch03']
+
+    option_parser = OptionParser.new do |opts|
+      opts.banner = "Usage: cisco_list_snmp.rb [options]"
+      opts.separator ""
+      opts.separator "Specific options:"
+
+      opts.on("-i SWITCH", "Enter specific switch") do |switch|
+        if options.switch.include?(switch.downcase)
+          options.switch = []
+          options.switch << switch
+        else
+          puts "Sorry, that switch is not on the list!"
+          puts "Either you have fat fingers or the script needs an update."
+          exit
+        end
+      end
+
+      opts.on( '-h', '--help', 'Display this screen' ) do
+        puts opts
+        exit
+      end
+
+    end
+
+    option_parser.parse!(args)
+    options
+  end # of parse()
+
+end # of OptionParse
+#############################################
 ################ Main Script ################
-puts "Cisco switches:"
-puts "==============="
-@switches.each do |switchname|
+options = OptionParse.parse(ARGV)
+
+options.switch.each do |switchname|
   puts "Checking #{switchname.upcase}..."
   s = Switch.new(switchname)
   s.list_snmp
