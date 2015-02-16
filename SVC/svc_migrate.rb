@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 #--
-# Copyright 2012 by Martin Horner (martin.horner@telecom.co.nz)
+# Copyright 2015 by Martin Horner (martin@mujosan.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -23,10 +23,12 @@
 #++
 
 #
-# migrate.rb
+# svc_migrate.rb
 #
 # This script lists active migrations across all (or specific) SVC clusters
 # 
+# !! Note - This script is unfinished !!
+
 ############ Required libraries #############
 require 'optparse'
 require 'ostruct'
@@ -40,12 +42,12 @@ class OptionParse
 
   def self.parse(args)
     options = OpenStruct.new
-    options.clusters = ['is3501','is3511','is3512']
+    options.clusters = ['cluster1','cluster2','cluster3']
     options.file = false
     options.host = false
 
     opts = OptionParser.new do |opts|
-      opts.banner = "Usage: migrate.rb [options]"
+      opts.banner = "Usage: svc_migrate.rb [options]"
       opts.separator ""
       opts.separator "Specific options:"
 
