@@ -23,7 +23,7 @@
 #++
 
 #
-# cisco_listsnmp2.rb
+# cisco_list_snmp.rb
 #
 # This script iterates through the Cisco MDS switches and returns the SNMP hosts
 # setup for each switch.
