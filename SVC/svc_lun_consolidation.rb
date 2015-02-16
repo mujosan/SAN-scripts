@@ -1,7 +1,7 @@
 #!/usr/local/bin/ruby
 
 #--
-# Copyright 2013 by Martin Horner (martin.horner@telecom.co.nz)
+# Copyright 2015 by Martin Horner (martin@mujosan.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -28,9 +28,6 @@
 # This script lists the hosts on each cluster. For each host it lists the vdisks.
 # Where a host has more than 10 vdisks under 50GB details are output to the console.
 #
-# Change History:
-# ===============
-# v0.1 - MH - First working release.
 
 ############### Required Gems ###############
 require 'optparse'
@@ -45,7 +42,7 @@ class OptionParse
 
   def self.parse(args)
     options = OpenStruct.new
-    options.clusters = ['is3501','is3511','is3512']
+    options.clusters = ['cluster1','cluster2','cluster3']
     options.fileofhosts = "consolidated_hosts.csv"
     options.verbose = false
     options.csv = false
