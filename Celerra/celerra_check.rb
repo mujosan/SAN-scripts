@@ -83,28 +83,23 @@ class Celerra
     end
   end
 
-  def faults
-    fault_description = []                      # Array to hold fault descriptions.
-    @daily.each("\n") do |line|
+  def check
+    faults = []
+    @daily.each_line do |line|
+      clean_line = line.squeeze(" .").chomp
       case
       when line =~ /Control Station/ && ( line =~ /Fail/ || line =~ /Warn/ )
-        fault_description << INDENT + line.squeeze(" .").chomp
+        faults << clean_line
         next
       when line =~ /Data Movers/ && ( line =~ /Fail/ || line =~ /Warn/ )
-        fault_description << INDENT + line.squeeze(" .").chomp
+        faults << clean_line
         next
       when line =~ /Storage System/ && ( line =~ /Fail/ || line =~ /Warn/ )
-        fault_description << INDENT + line.squeeze(" .").chomp
+        faults << clean_line
         next
       end
     end
-    if fault_description.length > 0
-      fault_description.unshift("Following issues found:")
-    else
-      fault_description << "ok."
-    end
-    fault_description << "\n"
-    fault_description.each {|f| print f }
+    faults unless faults.empty?
   end
 
 end # of Celerra
@@ -115,6 +110,12 @@ options = OptionParse.parse(ARGV)
 options.celerra.each do |name|
   print "Checking #{name.upcase}..."
   c = Celerra.new(name)
-  c.faults
+  faults = c.check.compact
+  if faults.empty?
+    puts "ok."
+  else
+    puts "Following issues found:"
+    puts faults
+  end
 end
 #################### End ####################
