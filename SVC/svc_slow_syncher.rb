@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 #
 #--
-# Copyright 2013 by Martin Horner (martin.horner@telecom.co.nz)
+# Copyright 2015 by Martin Horner (martin@mujosan.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -29,6 +29,43 @@
 # actively synching it starts the next one.
 #
 ######### Class/Module Definitions ##########
+class OptionParse
+
+  def self.parse(args)
+    options = OpenStruct.new
+    options.cluster = ['cluster1', 'cluster2', cluster3']
+
+    option_parser = OptionParser.new do |opts|
+      opts.banner = "Usage: svc_slow_syncher.rb [options]"
+      opts.separator ""
+      opts.separator "Specific options:"
+
+      opts.on('-c', '--cluster CLUSTERNAME', "Mandatory cluster name") do |cluster|
+        if options.cluster.include?(switch.downcase)
+          options.cluster = []
+          options.cluster << cluster
+        else
+          puts "Sorry, that cluster is not on the list!"
+          puts "Either you have fat fingers or the script needs an update."
+          exit
+        end
+      end
+
+      opts.on( '-h', '--help', 'Display this screen' ) do
+        puts opts
+        exit
+      end
+
+    end
+
+    option_parser.parse!(args)
+    options
+    
+    raise OptionParser::MissingArgument if options.cluster.nil?
+  end # of parse()
+
+end # of OptionParse
+
 class MetroMirror
 
   def initialize(cluster)
@@ -78,7 +115,7 @@ end # of MetroMirror
 ################ Main Script ################
 # Get the cluster id
 fail "Please specify cluster name" unless ARGV.length > 0
-fail "Please specify correct cluster name - is3501, is3511 or is3512" unless ARGV[0] =~ /is3501|is3511|is3512/
+fail "Please specify correct cluster name - cluster1, cluster2 or cluster3" unless ARGV[0] =~ /cluster1|cluster2|cluster3/
 
 mm = MetroMirror.new(ARGV[0])
 first = true
