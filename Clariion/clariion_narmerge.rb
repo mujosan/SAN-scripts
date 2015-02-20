@@ -4,20 +4,15 @@
 #
 # This script generates weekly merged archive dumps from the NAR files.
 #
-# Change History:
-# ===============
-# v0.1 - MH - First working release.
 
 ############### Required Gems ###############
 require 'date'
 #############################################
 ############ Variable Definitions ###########
 # Create an hash to store the Clariion names and associated serial numbers
-clariions = {'el014'  => 'CK200053000521',
-             'el1317' => 'CK200043300097',
-             'el2812' => 'CKM00083700210',
-             'el2855' => 'CKM00083801378',
-             'el2866' => 'CKM00083800141'}
+clariions = {'clar01' => 'CK200033001234',
+             'clar02' => 'CK200033304567',
+             'clar03' => 'CK200033709876'}
 
 #############################################
 ############ Constant Definitions ###########
