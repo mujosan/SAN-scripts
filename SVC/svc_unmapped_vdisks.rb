@@ -27,9 +27,6 @@
 #
 # This script lists the Vdisks that are unmapped.
 #
-# Change History:
-# ===============
-# v0.1 - MH - First working release.
 
 ############### Required Gems ###############
 require 'optparse'
