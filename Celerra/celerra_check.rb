@@ -28,7 +28,13 @@
 # This script connects to the EMC Celerras, via SSH, and retrieves the contents
 # of a daily log file. The log file is created by a shell script on the Celerra
 # that runs a "nas_checkup" command. This shell script is placed in
-# /etc/cron.daily on the control station.
+# /etc/cron.daily on the control station. The log file, daily.log, is created in
+# the log sub-directory of the user ("script") home directory on the control 
+# station.
+#
+# The shell script should also append the run timestamp to a run.log file in the
+# same directory for diagnostic purposes.
+# 
 
 ############### Required Gems ###############
 require 'net/ssh'
