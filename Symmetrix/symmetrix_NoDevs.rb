@@ -4,14 +4,11 @@
 #
 # This script reports masking database entries with no devices.
 #
-# Change History:
-# ===============
-# v0.1 - MH - First working release.
 
 require 'rubygems'
 require 'net/ssh'
 
-frames = ['364','285','370','080']
+frames = ['123','456','789']                            # Symmetrix SIDs
 
 outfile = File.new("NoDevs.txt", "w")
 
