@@ -52,7 +52,7 @@ class Symmetrix
     @list_addr = %x[symcfg -sid #{sid} -dir all list -addr]              # List all LUN addresses for all FAs
     @list_logins = %x[symmask -sid #{sid} -dir all -p all list logins]   # List all logins for all FAs
     @list_fail = %x[symdisk -sid #{sid} list -fail]                      # List any failed disks
-    @active = PAIRS868
+    @active = PAIRS123
   end # of initialize
 
   # Derive a hash of the number of mapped devices per FA
