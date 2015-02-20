@@ -25,8 +25,15 @@
 #
 # svc_slow_syncher.rb
 #
-# This script examines the list of available Remote Copy consistency groups and if none are 
-# actively synching it starts the next one.
+# This script was created in an environment where there was a concern around
+# the performance impact of having multiple relationships within Remote Copy
+# consistency groups running in parallel.
+#
+# A decision was made to limit the number of simultaneous RC relationships
+# synching to 6.
+#
+# This script examines the list of available Remote Copy consistency groups and 
+# if none are actively synching it starts the next one.
 #
 ######### Class/Module Definitions ##########
 class OptionParse
