@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #--
-# Copyright 2013 by Martin Horner (martin.horner@telecom.co.nz)
+# Copyright 2015 by Martin Horner (martin@mujosan.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -31,11 +31,11 @@ require 'rubygems'
 #############################################
 ############ Variable Definitions ###########
 # Array to store the Symmetrix names
-symmetrix = [ '868' ]
+symmetrix = [ '123' ]
 #############################################
 ############ Constant Definitions ###########
-# Hash to store the FA pairs for ES4344
-PAIRS868 = {"5EA" => "6EA", "7EA" => "8EA", "9EA" => "10EA", "5FA" => "6FA",
+# Hash to store the FA pairs for VMAX
+PAIRS123 = {"5EA" => "6EA", "7EA" => "8EA", "9EA" => "10EA", "5FA" => "6FA",
             "5GA" => "6GA", "7GA" => "8GA", "9GA" => "10GA", "7FA" => "8FA",
             "9FA" => "10FA", "5HA" => "6HA", "7HA" => "8HA", "9HA" => "10HA"}
 
