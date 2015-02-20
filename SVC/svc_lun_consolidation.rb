@@ -46,12 +46,12 @@ class OptionParse
     options.fileofhosts = "consolidated_hosts.csv"
     options.verbose = false
     options.csv = false
-    options.maximum = 25.0
+    options.maximum = 50.0
     options.quantity = 10
 
     opts = OptionParser.new do |opts|
       opts.banner = "Usage: svc_lun_consolidation.rb [options]"
-      opts.separator "Default criterion: Hosts with more than 10 LUNs that are less than 25GB"
+      opts.separator "Default criterion: Hosts with more than 10 LUNs that are less than 50GB"
       opts.separator ""
       opts.separator "Specific options:"
 
