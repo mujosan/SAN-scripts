@@ -39,6 +39,7 @@ Without the above any upgrades to a switch will break this script for that switc
     * MS Windows Server (not recommended - path names in scripts will require amendment).
 * SSH client.
 * EMC NavisecCLI
+* EMC Solutions Enabler
 
 ### Who do I talk to? ###
 
