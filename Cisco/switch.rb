@@ -128,9 +128,9 @@ class Switch
     descriptions = {}
     ssh("show interface description").each_line do |line|
       if line =~ /^fc/
-        # Populate the descriptions hash where the index is equal to the port id
-        # and value is the switchport description. Strip out CR and leading/trailing space.
-        descriptions[line.split.first] = line.split(/\s{12,14}/).last.chomp.strip
+        port_id = line.split.first
+        port_description = line.split(/\s{12,14}/).last.chomp.strip
+        descriptions[port_id] = port_description
       end
     end
     descriptions
