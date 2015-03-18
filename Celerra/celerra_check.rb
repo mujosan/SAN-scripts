@@ -93,17 +93,9 @@ class Celerra
     faults = []
     @daily.each_line do |line|
       clean_line = line.squeeze(" .").chomp
-      case
-      when line =~ /Control Station/ && ( line =~ /Fail/ || line =~ /Warn/ )
-        faults << clean_line
-        next
-      when line =~ /Data Movers/ && ( line =~ /Fail/ || line =~ /Warn/ )
-        faults << clean_line
-        next
-      when line =~ /Storage System/ && ( line =~ /Fail/ || line =~ /Warn/ )
-        faults << clean_line
-        next
-      end
+      fail_or_warning = (line =~ /Fail/ || line =~ /Warn/ )
+      component_of_interest = (line =~ /Control Station/ || line =~ /Data Movers/ || line =~ /Storage System/ )
+      faults << clean_line if component_of_interest && fail_or_warning
     end
     faults unless faults.empty?
   end
