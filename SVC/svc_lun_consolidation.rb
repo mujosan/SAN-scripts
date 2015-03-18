@@ -1,4 +1,4 @@
-#!/usr/local/bin/ruby
+#!/usr/bin/env ruby
 
 #--
 # Copyright 2015 by Martin Horner (martin@mujosan.com)
