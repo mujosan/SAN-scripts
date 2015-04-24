@@ -89,7 +89,7 @@ options = OptionParse.parse(ARGV)
 options.switch.each do |switchname|
   print "Backing up #{switchname.upcase}..." unless options.silent
   s = Switch.new(switchname)
-  s.backup(options.backupfilepath)
+  s.backup_config(options.backupfilepath)
   puts "done." unless options.silent
 end
 puts "Finished!" unless options.silent
