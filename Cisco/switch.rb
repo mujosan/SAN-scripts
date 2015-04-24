@@ -75,7 +75,7 @@ class Switch
 
   # This method backs up the switch running-config to a file.
   #
-  def backup(backupfilepath)
+  def backup_config(backupfilepath)
     running_config = ssh("show running-config")
     outfile = File.open(backupfilepath + "#{@switchname}_running-config_#{timestamp}.txt", 'w', 0660)
     outfile.puts running_config
