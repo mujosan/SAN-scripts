@@ -28,6 +28,7 @@
 require_relative '../common'
 ############### Required Gems ###############
 require "net/ssh"
+require "net/scp"
 #############################################
 class Switch
 
@@ -61,6 +62,16 @@ class Switch
       puts "Net::SSH::Exception has occurred: #{error.inspect}"
     end
   end
+  
+  def scp(source, destination)
+    begin
+      Net::SCP.start(@switchname, "script", :password => 'password' ) do |scp|
+        scp.download!(source, destination)
+      end
+    rescue Net::SCP::Error => error
+      puts "Net::SCP::Error has occurred: #{error.inspect}"
+    end
+  end
 
   # This method backs up the switch running-config to a file.
   #
@@ -69,6 +80,11 @@ class Switch
     outfile = File.open(backupfilepath + "#{@switchname}_running-config_#{timestamp}.txt", 'w', 0660)
     outfile.puts running_config
     outfile.close
+  end
+  
+  def backup_licenses(licensefilepath)
+    result = ssh("copy licenses bootflash:license_file.tar")
+    scp("bootflash:license_file.tar", licensefilepath)
   end
 
   def faults
