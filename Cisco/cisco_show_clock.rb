@@ -72,6 +72,16 @@ class OptionParse
   end # of parse()
 
 end # of OptionParse
+
+class Switch
+
+  def clock
+    ssh("show clock").each_line do |line|
+      puts line
+    end
+  end
+  
+end # of Switch
 #############################################
 ################ Main Script ################
 options = OptionParse.parse(ARGV)

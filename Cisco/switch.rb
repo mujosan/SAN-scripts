@@ -77,12 +77,6 @@ class Switch
     result = ssh("copy licenses bootflash:license_file.tar")
     scp("bootflash:license_file.tar", licensefilepath)
   end
-
-  def clock
-    ssh("show clock").each_line do |line|
-      puts line
-    end
-  end
   
   def version
     ssh("show version").each_line do |line|
