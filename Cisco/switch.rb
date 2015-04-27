@@ -73,18 +73,6 @@ class Switch
     end
   end
 
-  # This method lists the SNMP hosts.
-  #
-  def list_snmp
-    hosts = []
-    ssh("show snmp host").each_line do |line|
-      hosts << line.split.first if line =~ /\./
-    end
-    hosts.sort!
-    hosts.uniq!
-    puts hosts
-  end
-
   def uptime
     ssh("show system uptime").each_line do |line|
       if line =~ /System uptime/

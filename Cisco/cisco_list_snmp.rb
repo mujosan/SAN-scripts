@@ -79,6 +79,20 @@ class OptionParse
   end # of parse()
 
 end # of OptionParse
+
+class Switch
+
+  def list_snmp
+    hosts = []
+    ssh("show snmp host").each_line do |line|
+      hosts << line.split.first if line =~ /\./
+    end
+    hosts.sort!
+    hosts.uniq!
+    puts hosts
+  end
+
+end # of Switch
 #############################################
 ################ Main Script ################
 options = OptionParse.parse(ARGV)
