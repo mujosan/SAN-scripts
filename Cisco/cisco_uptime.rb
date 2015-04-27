@@ -62,6 +62,19 @@ class OptionParse
   end # of parse()
 
 end # of OptionParse
+
+class Switch
+
+  def uptime
+    ssh("show system uptime").each_line do |line|
+      if line =~ /System uptime/
+        @system_uptime = line.gsub(/System uptime:              /, '')
+      end
+    end
+    @system_uptime
+  end
+  
+end # of Switch
 ################ Main Script ################
 options = OptionParse.parse(ARGV)
 

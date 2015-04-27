@@ -73,13 +73,4 @@ class Switch
     end
   end
 
-  def uptime
-    ssh("show system uptime").each_line do |line|
-      if line =~ /System uptime/
-        @system_uptime = line.gsub(/System uptime:              /, '')
-      end
-    end
-    @system_uptime
-  end
-
 end # of Switch
