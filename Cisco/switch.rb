@@ -38,15 +38,6 @@ class Switch
     @switchname = name
   end
 
-  # This method runs a CLI (show) command against the switch.
-  #
-  # Exception handling included for:
-  #   Net::SSH::Exception - corrupted mac detected
-  #
-  #   This exception handling makes 10 attempts to get the running config before moving on to the next switch
-  #   with a 10sec delay between attempts. This should get around the flakey behaviour of ssh due to the bug
-  #   with the OpenSSH implementation on nx-os.
-  #
   def ssh(cmd)
     tries = 0
     begin
