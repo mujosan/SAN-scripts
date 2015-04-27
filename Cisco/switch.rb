@@ -73,12 +73,6 @@ class Switch
     end
   end
 
-  def version
-    ssh("show version").each_line do |line|
-      puts line.split.last if line =~ /system:/ && line =~ /version/
-    end
-  end
-
   # This method lists the SNMP hosts.
   #
   def list_snmp
