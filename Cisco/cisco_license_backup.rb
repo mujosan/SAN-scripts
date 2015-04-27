@@ -84,6 +84,15 @@ class OptionParse
 
 end # of OptionParse
 
+class Switch
+
+  def backup_licenses(licensefilepath)
+    result = ssh("copy licenses bootflash:license_file.tar")
+    scp("bootflash:license_file.tar", licensefilepath)
+  end
+  
+end # of Switch
+
 ################ Main Script ################
 options = OptionParse.parse(ARGV)
 

@@ -72,12 +72,7 @@ class Switch
       puts "Net::SCP::Error has occurred: #{error.inspect}"
     end
   end
-  
-  def backup_licenses(licensefilepath)
-    result = ssh("copy licenses bootflash:license_file.tar")
-    scp("bootflash:license_file.tar", licensefilepath)
-  end
-  
+
   def version
     ssh("show version").each_line do |line|
       puts line.split.last if line =~ /system:/ && line =~ /version/
