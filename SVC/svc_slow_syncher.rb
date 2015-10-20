@@ -40,7 +40,7 @@ class OptionParse
 
   def self.parse(args)
     options = OpenStruct.new
-    options.cluster = ['cluster1', 'cluster2', cluster3']
+    options.cluster = ['cluster1', 'cluster2', 'cluster3']
 
     option_parser = OptionParser.new do |opts|
       opts.banner = "Usage: svc_slow_syncher.rb [options]"
