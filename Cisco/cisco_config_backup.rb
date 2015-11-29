@@ -83,6 +83,17 @@ class OptionParse
 
 end # of OptionParse
 
+class Switch
+  
+  def backup_config(backupfilepath)
+    running_config = ssh("show running-config")
+    outfile = File.open(backupfilepath + "#{@switchname}_running-config_#{timestamp}.txt", 'w', 0660)
+    outfile.puts running_config
+    outfile.close
+  end
+
+end # of Switch
+
 ################ Main Script ################
 options = OptionParse.parse(ARGV)
 

@@ -88,6 +88,101 @@ class OptionParse
   end # of parse()
 
 end # of OptionParse
+
+class Switch
+
+  def faults
+    @faults = []
+    @faults << power_faults
+    @faults << module_faults
+    @faults << bootflash_faults
+    @faults << port_faults
+    @faults << isl_faults
+    @faults
+  end
+
+  def power_faults
+    faults = []
+    ssh("show environment power").each_line do |line|
+      if line =~ /^\d/ && line =~ /DS-CAC/ && line.split.last.downcase != "ok"
+        faults << "Power supply #{line.split.first} is: #{line.split.last}"
+      end
+      if line =~ /^[\d|X|f]/ && line =~ /DS-X|DS-1/ && line.split.last.downcase != "powered-up"
+        faults << "Module #{line.split.first} is: #{line.split.last}"
+      end
+    end
+    faults unless faults.empty?
+  end
+
+  def module_faults
+    faults = []
+    scount = 0
+    ssh("show module").each_line do |line|
+      if line =~ /FC Module/ && line.split.last != "ok"
+        faults << "FC module in slot #{line.split.first} is: #{line.split.last}"
+      end
+      if line =~ /Supervisor/
+        scount += 1
+        unless line.split[4] != "active" || line.split[4] != "ha-standby"   # unless status is "active" or "ha-standby"
+          faults << "Supervisor #{scount} is: #{line.split[4]}"
+        end
+      end
+    end
+    faults unless faults.empty?
+  end
+
+  def bootflash_faults
+    faults = []
+    ssh("show system health statistics").each_line do |line|
+      smodule = line.split.last if line =~ /module/
+      if line =~ /Bootflash/
+        if line.split[7].to_i > 10
+          faults << "Bootflash errors in module #{smodule}"
+        end
+      end
+    end
+    faults unless faults.empty?
+  end
+
+  def port_descriptions
+    descriptions = {}
+    ssh("show interface description").each_line do |line|
+      if line =~ /^fc/
+        port_id = line.split.first
+        port_description = line.split(/\s{12,14}/).last.chomp.strip
+        descriptions[port_id] = port_description
+      end
+    end
+    descriptions
+  end
+
+  def port_faults
+    faults = []
+    descriptions = port_descriptions
+    ssh("show interface brief").each_line do |line|
+      if line =~ /^fc/ && line.split[1] != "4094" && line.split[4] != "up" &&
+                          line.split[4] != "down" && line.split[4] != "trunking"
+        faults << "Port #{line.split[0]} (#{descriptions[line.split[0]]} : #{line.split[1]})" +
+                  " is #{line.split[4]}"
+      end
+    end
+    faults unless faults.empty?
+  end
+
+  def isl_faults
+    faults = []
+    descriptions = port_descriptions
+    ssh("show interface brief").each_line do |line|
+      if line =~ /^fc/ && line.split[1] != "4094" && line.split[2] == "E" && # fc line not in isolated VSAN and it's an E_Port
+                          line.split[3] != "on" && line.split[4] != "trunking"
+        faults << "ISL #{line.split[0]} (#{descriptions[line.split[0]]} : #{line.split[1]})" +
+                  " is #{line.split[4]}"
+      end
+    end
+    faults unless faults.empty?
+  end
+
+end # of Switch
 #############################################
 ################ Main Script ################
 options = OptionParse.parse(ARGV)

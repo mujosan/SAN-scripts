@@ -72,6 +72,16 @@ class OptionParse
   end # of parse()
 
 end # of OptionParse
+
+class Switch
+
+  def version
+    ssh("show version").each_line do |line|
+      puts line.split.last if line =~ /system:/ && line =~ /version/
+    end
+  end
+  
+end # of Switch
 #############################################
 ################ Main Script ################
 options = OptionParse.parse(ARGV)

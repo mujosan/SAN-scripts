@@ -35,10 +35,6 @@
 require 'optparse'
 require 'ostruct'
 #############################################
-############ Variable Definitions ###########
-#############################################
-############ Constant Definitions ###########
-#############################################
 ######### Class/Module Definitions ##########
 class OptionParse
 
