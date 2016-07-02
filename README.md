@@ -15,7 +15,7 @@ These scripts are intended to be run on a *nix platform.
 * Clone the repository.
 * Amend equipment names to suit local naming conventions.
 * Amend PATH constants to suit.
-* Install SSH & EMC NavisecCLI.
+* Install EMC Solutions Enabler & NavisecCLI.
 
 #### Configuration ####
 
