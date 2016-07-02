@@ -4,7 +4,7 @@
 
 This is a collection of Ruby scripts created to assist with my day job as a storage admin.
 
-The Cisco MDS and EMC Clariion/VNX scripts were initially created on a Linux (Centos) server and later "enhanced" on a Solaris machine. IBM SVC scripts created on the Solaris machine.
+The Cisco MDS and EMC Clariion/VNX scripts were initially created on a Linux (Centos) server and later "enhanced" on a Solaris machine. IBM SVC scripts were created on the Solaris machine.
 
 Version **1.0**
 
